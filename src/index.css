@@ -1,13 +1,56 @@
-body {
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*{
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  background-color: rgb(248, 250, 252);
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+html, 
+body{
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body::-webkit-scrollbar {
+  width: 0.5em;
+}
+ 
+body::-webkit-scrollbar-track {
+  background-color: transparent;
+
+}
+ 
+body::-webkit-scrollbar-thumb {
+  background-color: rgb(234, 88, 12);
+}
+
+
+.input-container{
+  @apply flex h-full w-full items-center border-b-2
+}
+.input-field {
+  @apply h-full w-full bg-transparent p-3 text-base text-textColor outline-none placeholder:text-lightText
+}
+.card-item-container{
+ @apply my-6 flex h-full w-275 min-w-[275px] max-w-sm flex-col 
+ items-center justify-evenly gap-2 rounded-lg border-b-4 border-b-orange-600 bg-white     
+ shadow-lg shadow-slate-200 backdrop-blur-lg transition-all delay-300 duration-300 ease-in-out sm:my-8
 }
