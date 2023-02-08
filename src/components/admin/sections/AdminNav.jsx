@@ -35,7 +35,7 @@ export const AdminNav = ({ setActiveSection }) => {
     },
     { name: "analytics", section: "/", icon: TbReportAnalytics, margin: true },
     { name: "Buy Orders", section: "/", icon: TbMotorbike },
-    { name: "Setting", section: "/", icon: RiSettings4Line },
+    { name: "Settings", section: "settings", icon: RiSettings4Line },
   ];
 
   const [{ sidebarOpen }, dispatch] = useStateValue();

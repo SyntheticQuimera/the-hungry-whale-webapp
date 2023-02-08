@@ -61,7 +61,6 @@ export const Carousel = () => {
         type='chevronRight'
         className='absolute right-2 z-20 pl-1'
       />
-
       {isLoading ? (
         <BeatLoader size={20} color={"#ffa801"} loading={isLoading} />
       ) : (

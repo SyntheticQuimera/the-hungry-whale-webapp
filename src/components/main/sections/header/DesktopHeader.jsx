@@ -9,7 +9,7 @@ import {
 import { RiInstagramLine, RiFacebookCircleLine } from "react-icons/ri";
 import { TbBrandTiktok } from "react-icons/tb";
 import logo from "../../../../assets/logo.svg";
-import avatar from "../../../../assets/Icons/orca.png";
+import avatar from "../../../../assets/icons/orca.png";
 
 import { useCloseModal, useAuth } from "../../../../hooks";
 import { useStateValue } from "../../../../context/StateProvider";

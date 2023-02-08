@@ -7,11 +7,12 @@ import { Admin } from "./components/admin/Admin";
 import { useFetchData } from "./hooks/useFetchData";
 
 function App() {
-  const { fetchData, fetchCategories } = useFetchData();
+  const { fetchData, fetchCategories, fetchSettings } = useFetchData();
 
   useEffect(() => {
     fetchData();
     fetchCategories();
+    fetchSettings();
   }, []);
 
   return (

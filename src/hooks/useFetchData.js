@@ -1,5 +1,9 @@
 import { useStateValue } from "../context/StateProvider";
-import { getAllCategories, getAllFoodItems } from "../utils/firebaseFunctions";
+import {
+  getAllCategories,
+  getAllFoodItems,
+  getSettings,
+} from "../utils/firebaseFunctions";
 import { actionType } from "../context/reducer";
 
 export const useFetchData = () => {
@@ -23,9 +27,19 @@ export const useFetchData = () => {
     });
   };
 
+  const fetchSettings = async () => {
+    await getSettings().then((data) => {
+      dispatch({
+        type: actionType.SET_SETTINGS_DATA,
+        settings: data,
+      });
+    });
+  };
+
   return {
     foodItems,
     fetchData,
     fetchCategories,
+    fetchSettings,
   };
 };

@@ -4,6 +4,7 @@ import {
   AdminNav,
   ManageCategories,
   ManageItems,
+  Settings,
 } from "../admin/sections";
 import { useStateValue } from "../../context/StateProvider";
 
@@ -22,6 +23,7 @@ export const Admin = () => {
           {activeSection === "addItems" && <ItemForm />}
           {activeSection === "manageItems" && <ManageItems />}
           {activeSection === "manageCategories" && <ManageCategories />}
+          {activeSection === "settings" && <Settings />}
         </div>
       </div>
     </>

@@ -6,7 +6,7 @@ import { TiDelete } from "react-icons/ti";
 import {
   removeCategory,
   updateCategory,
-  updateItem,
+  updateItemCategory,
 } from "../../utils/firebaseFunctions";
 import { useStateValue } from "../../context/StateProvider";
 import { useFetchData } from "../../hooks";
@@ -32,7 +32,7 @@ export const UpdateCategory = ({ category }) => {
             id: item.id,
             category: values.updateCategory,
           };
-          updateItem(itemData);
+          updateItemCategory(itemData);
         }
       });
       const data = {

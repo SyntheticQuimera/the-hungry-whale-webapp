@@ -34,7 +34,6 @@ export const getAllFoodItems = async () => {
 };
 
 // getall food category
-
 export const getAllCategories = async () => {
   const categories = await getDocs(
     query(collection(firestore, "category"), orderBy("id", "asc"))
@@ -55,8 +54,8 @@ export const updateCategory = async (data) => {
     name: data.name,
   });
 };
-// update fields in foodItems doc
 
+// update fields in foodItems doc
 export const updateItem = async (data) => {
   await updateDoc(doc(firestore, "foodItems", data.id), {
     category: data.category,
@@ -65,4 +64,36 @@ export const updateItem = async (data) => {
     price: data.price,
     title: data.title,
   });
+};
+export const updateItemCategory = async (data) => {
+  await updateDoc(doc(firestore, "foodItems", data.id), {
+    category: data.category,
+  });
+};
+
+// Saving new settings
+export const saveSettings = async (data) => {
+  await setDoc(doc(firestore, "settings", data.id), data, {
+    merge: true,
+  });
+};
+
+// update fields in settings doc
+export const updateSettings = async (data) => {
+  await updateDoc(doc(firestore, "settings", data.id), {
+    homeTitle: data.homeTitle,
+    homeDescription: data.homeDescription,
+    aboutUsDescription: data.aboutUsDescription,
+    logo: data.logo,
+    aboutUsImage: data.aboutUsImage,
+  });
+};
+
+// get settings
+export const getSettings = async () => {
+  const settings = await getDocs(
+    query(collection(firestore, "settings"), orderBy("id", "asc"))
+  );
+
+  return settings.docs.map((doc) => doc.data());
 };

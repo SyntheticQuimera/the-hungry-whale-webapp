@@ -6,7 +6,7 @@ export const AboutUs = () => {
   return (
     <>
       <Title title='About Us' />
-      <div className='mb-12 flex w-full flex-col overflow-hidden rounded-lg bg-white shadow-md shadow-slate-200 md:flex-row'>
+      <div className='mb-12 flex w-full flex-col overflow-hidden rounded-lg bg-white shadow-md shadow-slate-200 lg:flex-row'>
         <div className='flex w-full'>
           <img src={image} alt='' className='object-cover' />
         </div>

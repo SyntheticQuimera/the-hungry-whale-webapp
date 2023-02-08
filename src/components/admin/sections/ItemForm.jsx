@@ -2,18 +2,11 @@ import React, { useState } from "react";
 import * as Yup from "yup";
 import { motion } from "framer-motion";
 import { Formik, Field, Form, ErrorMessage } from "formik";
-import {
-  getDownloadURL,
-  ref,
-  uploadBytesResumable,
-  deleteObject,
-} from "firebase/storage";
 import { IoCloudUploadOutline, IoTrashOutline } from "react-icons/io5";
 import { BiDollar } from "react-icons/bi";
-import { storage } from "../../../firebase.config";
 import { saveItem } from "../../../utils/firebaseFunctions";
 import { useStateValue } from "../../../context/StateProvider";
-import { useFetchData } from "../../../hooks";
+import { useFetchData, useUploadImage } from "../../../hooks";
 import { Title, HwButton, ErrorMessageForm } from "../../shared";
 
 export const ItemForm = () => {
@@ -23,47 +16,12 @@ export const ItemForm = () => {
   const [uploadProgressInfo, setUploadProgressInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const uploadImage = (e) => {
-    setIsLoading(true);
-    const imageFile = e.target.files[0];
-    const storageRef = ref(
-      storage,
-      `Images/${Date.now()}-${e.target.files[0].name}`
-    );
-    const uploadTask = uploadBytesResumable(storageRef, imageFile);
-
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const uploadProgress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setUploadProgressInfo(() => uploadProgress.toFixed());
-      },
-
-      (error) => {
-        console.log(error);
-        setIsLoading(false);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setIsLoading(false);
-          setImageAsset(downloadURL);
-        });
-      }
-    );
-  };
-
-  const deleteImage = () => {
-    const deleteRef = ref(storage, imageAsset);
-    deleteObject(deleteRef)
-      .then(() => {
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        console.log(error);
-      });
-  };
+  const { uploadImage, deleteImage } = useUploadImage({
+    imageAsset,
+    setImageAsset,
+    setUploadProgressInfo,
+    setIsLoading,
+  });
 
   const initialValues = {
     title: "",
@@ -129,7 +87,7 @@ export const ItemForm = () => {
             className='flex w-full flex-col items-center justify-center gap-4 rounded-xl border 
           border-slate-200 bg-white p-8 shadow-lg shadow-slate-200'>
             <div className='flex w-full flex-col gap-8 sm:flex-row-reverse'>
-              <div className='flex h-full w-full flex-col gap-1'>
+              <div className='flex h-full w-full flex-col gap-4'>
                 <div className='input-container'>
                   <Field
                     name='title'
@@ -151,7 +109,7 @@ export const ItemForm = () => {
                 </div>
                 <ErrorMessage name='price'>{ErrorMessageForm}</ErrorMessage>
 
-                <div className='input-container gap-2'>
+                <div className='input-container rounded-lg border-2'>
                   <Field
                     name='description'
                     as='textarea'

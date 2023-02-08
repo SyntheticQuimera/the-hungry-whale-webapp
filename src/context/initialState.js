@@ -10,4 +10,5 @@ export const initialState = {
   cartOpen: false,
   categories: null,
   cartItems: cartData,
+  settings: null,
 };

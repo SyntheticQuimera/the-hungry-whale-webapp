@@ -5,6 +5,7 @@ export const actionType = {
   SET_CATEGORIES_DATA: "SET_CATEGORIES_DATA",
   SET_CART_SWITCH: "SET_CART_SWITCH",
   SET_CART_ITEMS: "SET_CART_ITEMS",
+  SET_SETTINGS_DATA: "SET_SETTINGS_DATA",
 };
 
 export const reducer = (state, action) => {
@@ -28,6 +29,11 @@ export const reducer = (state, action) => {
       return {
         ...state,
         categories: action.categories,
+      };
+    case actionType.SET_SETTINGS_DATA:
+      return {
+        ...state,
+        settings: action.settings,
       };
     case actionType.SET_CART_SWITCH:
       return {

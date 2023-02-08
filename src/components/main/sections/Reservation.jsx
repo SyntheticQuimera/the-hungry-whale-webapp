@@ -60,124 +60,126 @@ export const Reservation = () => {
 
   return (
     <>
-      <MapView />
-
       <Title title='Reservation' />
 
-      <div className='flex w-full justify-start'>
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={(values, { setSubmitting, resetForm }) => {
-            setTimeout(() => {
-              setSubmitting(false);
-              resetForm();
-            }, 400);
-          }}>
-          <Form
-            className='flex w-full flex-col items-center justify-center gap-4 rounded-xl border
-           border-slate-200 bg-white p-8 shadow-lg shadow-slate-200 lg:w-[50%]'>
-            <div className='flex w-full gap-6'>
-              <div className='flex w-full'>
-                <div className='input-container'>
-                  <Field
-                    name='date'
-                    type='date'
-                    min={getDates().today}
-                    max={getDates().threeWeeksFromToday}
-                    className='input-field'
-                  />
+      <div
+        className='flex w-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg
+           shadow-slate-200  lg:flex-row '>
+        <div className='flex h-auto w-full '>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={(values, { setSubmitting, resetForm }) => {
+              setTimeout(() => {
+                setSubmitting(false);
+                resetForm();
+              }, 400);
+            }}>
+            <Form className='flex w-full flex-col items-center justify-center gap-4 p-8 '>
+              <div className='flex w-full flex-col gap-6 md:flex-row'>
+                <div className='flex w-full '>
+                  <div className='input-container'>
+                    <Field
+                      name='date'
+                      type='date'
+                      min={getDates().today}
+                      max={getDates().threeWeeksFromToday}
+                      className='input-field'
+                    />
+                  </div>
+
+                  <div className='input-container'>
+                    <Field
+                      name='hour'
+                      type='time'
+                      min='09:00'
+                      max='18:00'
+                      className='input-field'
+                    />
+                  </div>
                 </div>
 
+                <Field
+                  name='amount'
+                  as='select'
+                  className='input-field cursor-pointer border-b-2'>
+                  <option value='' disabled>
+                    People
+                  </option>
+                  {peopleAmount &&
+                    peopleAmount.map((e, i) => (
+                      <option key={i} value={e} className='text-textColor'>
+                        {e}
+                      </option>
+                    ))}
+                </Field>
+              </div>
+              <ErrorMessage name='date'>{ErrorMessageForm}</ErrorMessage>
+              <ErrorMessage name='hour'>{ErrorMessageForm}</ErrorMessage>
+              <ErrorMessage name='amount'>{ErrorMessageForm}</ErrorMessage>
+
+              <div className='flex w-full flex-col gap-6 md:flex-row'>
                 <div className='input-container'>
                   <Field
-                    name='hour'
-                    type='time'
-                    min='09:00'
-                    max='18:00'
+                    name='name'
+                    type='text'
                     className='input-field'
+                    placeholder='name'
+                  />
+                </div>
+                <div className='input-container'>
+                  <Field
+                    name='email'
+                    type='email'
+                    className='input-field'
+                    placeholder='example@mail.com'
                   />
                 </div>
               </div>
+              <ErrorMessage name='name'>{ErrorMessageForm}</ErrorMessage>
+              <ErrorMessage name='email'>{ErrorMessageForm}</ErrorMessage>
 
-              <Field
-                name='amount'
-                as='select'
-                className='input-field cursor-pointer border-b-2'>
-                <option value='' disabled>
-                  Select a amount
-                </option>
-                {peopleAmount &&
-                  peopleAmount.map((e, i) => (
-                    <option key={i} value={e} className='text-textColor'>
-                      {e}
-                    </option>
-                  ))}
-              </Field>
-            </div>
-            <ErrorMessage name='date'>{ErrorMessageForm}</ErrorMessage>
-            <ErrorMessage name='hour'>{ErrorMessageForm}</ErrorMessage>
-            <ErrorMessage name='amount'>{ErrorMessageForm}</ErrorMessage>
+              <div className='flex w-full flex-col gap-6 md:flex-row'>
+                <div className='input-container'>
+                  <Field
+                    name='phone'
+                    type='tel'
+                    className='input-field'
+                    placeholder='+1-000-000-0000'
+                  />
+                </div>
+                <div className='input-container'>
+                  <Field
+                    name='ssn'
+                    type='text'
+                    className='input-field'
+                    placeholder='Security Social Number'
+                  />
+                </div>
+              </div>
+              <ErrorMessage name='phone'>{ErrorMessageForm}</ErrorMessage>
+              <ErrorMessage name='ssn'>{ErrorMessageForm}</ErrorMessage>
 
-            <div className='flex w-full gap-6'>
-              <div className='input-container'>
+              <div className='input-container rounded-lg border-2'>
                 <Field
-                  name='name'
+                  name='note'
                   type='text'
+                  as='textarea'
+                  rows='5'
                   className='input-field'
-                  placeholder='name'
+                  placeholder='Note - Not Required'
                 />
               </div>
-              <div className='input-container'>
-                <Field
-                  name='email'
-                  type='email'
-                  className='input-field'
-                  placeholder='example@mail.com'
-                />
-              </div>
-            </div>
-            <ErrorMessage name='name'>{ErrorMessageForm}</ErrorMessage>
-            <ErrorMessage name='email'>{ErrorMessageForm}</ErrorMessage>
+              <ErrorMessage name='note'>{ErrorMessageForm}</ErrorMessage>
 
-            <div className='flex w-full gap-6'>
-              <div className='input-container'>
-                <Field
-                  name='phone'
-                  type='tel'
-                  className='input-field'
-                  placeholder='+1-000-000-0000'
-                />
+              <div className='flex w-full justify-end'>
+                <HwButton title='Reserve' type='solidFull' />
               </div>
-              <div className='input-container'>
-                <Field
-                  name='ssn'
-                  type='text'
-                  className='input-field'
-                  placeholder='Security Social Number'
-                />
-              </div>
-            </div>
-            <ErrorMessage name='phone'>{ErrorMessageForm}</ErrorMessage>
-            <ErrorMessage name='ssn'>{ErrorMessageForm}</ErrorMessage>
+            </Form>
+          </Formik>
+        </div>
 
-            <div className='input-container rounded-lg border-2'>
-              <Field
-                name='note'
-                type='text'
-                as='textarea'
-                rows='5'
-                className='input-field'
-                placeholder='Note - Not Required'
-              />
-            </div>
-            <ErrorMessage name='note'>{ErrorMessageForm}</ErrorMessage>
-
-            <div className='flex w-full justify-end'>
-              <HwButton title='Reserve' type='solidFull' />
-            </div>
-          </Form>
-        </Formik>
+        <MapView />
       </div>
     </>
   );

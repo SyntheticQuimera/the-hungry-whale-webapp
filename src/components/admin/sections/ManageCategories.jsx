@@ -52,7 +52,7 @@ export const ManageCategories = () => {
           onSubmit={handleSubmit}>
           <Form
             className='flex w-full flex-col items-center justify-center gap-4 rounded-xl border border-slate-200 bg-white 
-          p-8 shadow-lg shadow-slate-200 sm:flex-row md:w-[50%]'>
+          p-8 shadow-lg shadow-slate-200 sm:flex-row lg:w-[70%]'>
             <div className='flex w-full flex-col gap-4'>
               <div className='input-container'>
                 <Field
@@ -69,7 +69,7 @@ export const ManageCategories = () => {
             </div>
           </Form>
         </Formik>
-        <div className='flex w-full flex-wrap items-center gap-4 py-6 md:w-[50%]'>
+        <div className='flex w-full flex-wrap items-center gap-4 py-6 lg:w-[70%]'>
           {menuCategories &&
             menuCategories.map((category) => (
               <UpdateCategory category={category} />

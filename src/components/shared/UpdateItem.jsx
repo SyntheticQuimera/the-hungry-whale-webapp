@@ -1,18 +1,11 @@
 import React, { useState } from "react";
 import * as Yup from "yup";
 import { Formik, Field, Form, ErrorMessage } from "formik";
-import {
-  getDownloadURL,
-  ref,
-  uploadBytesResumable,
-  deleteObject,
-} from "firebase/storage";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { BiDollar } from "react-icons/bi";
-import { storage } from "../../firebase.config";
 import { updateItem } from "../../utils/firebaseFunctions";
 import { useStateValue } from "../../context/StateProvider";
-import { useFetchData } from "../../hooks";
+import { useFetchData, useUploadImage } from "../../hooks";
 import { CircleButton, ErrorMessageForm } from "../shared";
 
 export const UpdateItem = ({
@@ -26,46 +19,12 @@ export const UpdateItem = ({
   const [uploadProgressInfo, setUploadProgressInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const uploadImage = (e) => {
-    setIsLoading(true);
-    const imageFile = e.target.files[0];
-    const storageRef = ref(
-      storage,
-      `Images/${Date.now()}-${e.target.files[0].name}`
-    );
-    const uploadTask = uploadBytesResumable(storageRef, imageFile);
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const uploadProgress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setUploadProgressInfo(() => uploadProgress.toFixed());
-      },
-      (error) => {
-        console.log(error);
-        setIsLoading(false);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setIsLoading(false);
-          setImageAsset(downloadURL);
-        });
-      }
-    );
-  };
-
-  const deleteImage = () => {
-    const deleteRef = ref(storage, imageAsset);
-    deleteObject(deleteRef)
-      .then(() => {
-        setIsLoading(false);
-        setImageAsset(null);
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        console.log(error);
-      });
-  };
+  const { uploadImage, deleteImage } = useUploadImage({
+    imageAsset,
+    setImageAsset,
+    setUploadProgressInfo,
+    setIsLoading,
+  });
 
   const initialValues = {
     title: item.title,
@@ -197,7 +156,7 @@ export const UpdateItem = ({
           </div>
           <ErrorMessage name='title'>{ErrorMessageForm}</ErrorMessage>
 
-          <div className='input-container rounded-lg'>
+          <div className='input-container rounded-lg border-2'>
             <Field
               rows='6'
               name='description'
