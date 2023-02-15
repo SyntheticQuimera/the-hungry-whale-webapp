@@ -1,13 +1,15 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { BiEditAlt, BiCheck, BiX } from "react-icons/bi";
-import { IoTrashOutline } from "react-icons/io5";
 import {
-  HiOutlineShoppingBag,
-  HiChevronLeft,
-  HiChevronRight,
-} from "react-icons/hi2";
-import { IoMdArrowBack } from "react-icons/io";
+  BsArrowLeft,
+  BsCart2,
+  BsPencil,
+  BsChevronLeft,
+  BsChevronRight,
+  BsCheck2,
+  BsTrash,
+  BsX,
+} from "react-icons/bs";
 
 export const HwButton = ({ type, icon: Icon, onClick, title }) => {
   return (
@@ -27,7 +29,7 @@ export const HwButton = ({ type, icon: Icon, onClick, title }) => {
           ? " border-2 border-lime-500 bg-gradient-to-r text-lime-500"
           : ""
       }
-      w-full rounded-lg px-4 py-3 text-base font-normal  outline-none hover:brightness-110
+      w-full rounded-lg px-4 py-2 text-base font-normal  outline-none hover:brightness-110
     `}>
       <div
         className={`flex h-full w-full items-center  ${
@@ -65,21 +67,21 @@ export const CircleButton = ({ type, onClick, className }) => {
       } flex h-10 w-10 items-center justify-center rounded-full shadow-md shadow-slate-200`}
       onClick={onClick}>
       {type === "check" ? (
-        <BiCheck className='text-xl text-white' />
+        <BsCheck2 className='text-xl text-white' />
       ) : type === "edit" ? (
-        <BiEditAlt className='text-xl text-white' />
+        <BsPencil className='text-xl text-white' />
       ) : type === "delete" ? (
-        <IoTrashOutline className='text-xl text-white' />
+        <BsTrash className='text-xl text-white' />
       ) : type === "buy" ? (
-        <HiOutlineShoppingBag className='text-xl text-white' />
+        <BsCart2 className='text-xl text-white' />
       ) : type === "cancel" ? (
-        <BiX className='text-xl text-white' />
+        <BsX className='text-xl text-white' />
       ) : type === "chevronLeft" ? (
-        <HiChevronLeft className='text-xl text-hoverTextColor' />
+        <BsChevronLeft className='text-xl text-hoverTextColor' />
       ) : type === "chevronRight" ? (
-        <HiChevronRight className='text-xl text-hoverTextColor' />
+        <BsChevronRight className='text-xl text-hoverTextColor' />
       ) : type === "arrowLeft" ? (
-        <IoMdArrowBack className='text-xl text-hoverTextColor' />
+        <BsArrowLeft className='text-xl text-hoverTextColor' />
       ) : (
         ""
       )}

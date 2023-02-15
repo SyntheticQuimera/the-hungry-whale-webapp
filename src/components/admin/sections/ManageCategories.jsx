@@ -6,7 +6,7 @@ import {
   UpdateCategory,
   HwButton,
   Title,
-  ErrorMessageForm,
+  ErrorIconMessage,
 } from "../../shared";
 import { useStateValue } from "../../../context/StateProvider";
 import { useFetchData } from "../../../hooks";
@@ -61,8 +61,10 @@ export const ManageCategories = () => {
                   className='input-field'
                   placeholder='Category'
                 />
+                <ErrorMessage name='category'>
+                  {(msg) => <ErrorIconMessage msg={msg} />}
+                </ErrorMessage>
               </div>
-              <ErrorMessage name='category'>{ErrorMessageForm}</ErrorMessage>
             </div>
             <div className='flex w-full justify-end sm:w-auto'>
               <HwButton title='Upload' type='solid' />
@@ -72,7 +74,7 @@ export const ManageCategories = () => {
         <div className='flex w-full flex-wrap items-center gap-4 py-6 lg:w-[70%]'>
           {menuCategories &&
             menuCategories.map((category) => (
-              <UpdateCategory category={category} />
+              <UpdateCategory key={category.id} category={category} />
             ))}
         </div>
       </div>

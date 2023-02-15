@@ -1,48 +1,46 @@
 import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { MdOutlineDashboard } from "react-icons/md";
-import {
-  HiOutlineShoppingBag,
-  HiOutlineArrowRightOnRectangle,
-} from "react-icons/hi2";
+import { BsBoxArrowRight, BsGrid, BsCart2 } from "react-icons/bs";
 import { RiInstagramLine, RiFacebookCircleLine } from "react-icons/ri";
 import { TbBrandTiktok } from "react-icons/tb";
-import logo from "../../../../assets/logo.svg";
 import avatar from "../../../../assets/icons/orca.png";
-
 import { useCloseModal, useAuth } from "../../../../hooks";
 import { useStateValue } from "../../../../context/StateProvider";
 import { actionType } from "../../../../context/reducer";
+import { NavLink } from "../../../shared";
 
-const headerNav = [
-  { title: "Home", link: "#home" },
-  { title: "Menu", link: "#menu" },
-  { title: "About Us", link: "#aboutus" },
-  { title: "Reservation", link: "#reservation" },
-];
-
-const NavLink = ({ link, children }) => {
-  const handleClick = () => {
-    const targetSection = document.querySelector(link);
-    targetSection.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
-  return (
-    <Link to={link} onClick={handleClick}>
-      {children}
-    </Link>
-  );
-};
-
-const icons = [RiFacebookCircleLine, RiInstagramLine, TbBrandTiktok];
-
-export const DesktopHeader = () => {
+export const DesktopHeader = ({ totalQty, subtotalPrice }) => {
   const { user, login, userMenu, setUserMenu, userName, logout } = useAuth();
 
-  const [{ cartOpen, cartItems }, dispatch] = useStateValue();
+  const [{ cartOpen, cart, settings }, dispatch] = useStateValue();
 
   const userMenuRef = useRef();
+
+  const headerNav = [
+    { title: "Home", link: "#home" },
+    { title: "Menu", link: "#menu" },
+    { title: "About Us", link: "#aboutus" },
+    { title: "Reservation", link: "#reservation" },
+  ];
+
+  const openFacebook = () => {
+    window.open(settings.facebook, "_blank");
+  };
+
+  const openInstagram = () => {
+    window.open(settings.instagram, "_blank");
+  };
+
+  const openTiktok = () => {
+    window.open(settings.tiktok, "_blank");
+  };
+
+  const icons = [
+    { icon: RiFacebookCircleLine, link: openFacebook },
+    { icon: RiInstagramLine, link: openInstagram },
+    { icon: TbBrandTiktok, link: openTiktok },
+  ];
 
   const showCart = () => {
     dispatch({
@@ -54,14 +52,18 @@ export const DesktopHeader = () => {
   useCloseModal(setUserMenu, userMenuRef);
 
   return (
-    <div className='hidden h-full w-full md:flex'>
+    <div className='hidden h-full w-full lg:flex'>
       {/* Logo */}
 
-      <div className='flex items-center justify-center'>
-        <Link to={"/"}>
-          <img className='w-28 min-w-[112px]' src={logo} alt='logo' />
-        </Link>
-      </div>
+      {!settings ? (
+        ""
+      ) : (
+        <div className='flex items-center justify-center'>
+          <Link to={"/"}>
+            <img className='h-14' src={settings.logo} alt='logo' />
+          </Link>
+        </div>
+      )}
 
       {/* Navigation */}
 
@@ -80,27 +82,31 @@ export const DesktopHeader = () => {
 
       {/* Icons */}
 
-      <div className='ml-auto flex items-center gap-6 lg:gap-8'>
-        {icons.map((Icon, i) => (
-          <motion.div
-            key={i}
-            whileHover={{ scale: 1.2 }}
-            whileTap={{ scale: 0.8 }}>
-            <Icon className='cursor-pointer text-xl text-textColor duration-100 hover:text-hoverTextColor' />
-          </motion.div>
-        ))}
+      <div className='ml-auto flex items-center justify-center gap-6 lg:gap-8'>
+        {settings &&
+          icons.map((icon, i) => (
+            <motion.button
+              onClick={icon.link}
+              key={i}
+              whileHover={{ scale: 1.2 }}
+              whileTap={{ scale: 0.8 }}>
+              <icon.icon className='cursor-pointer text-xl text-textColor duration-100 hover:text-hoverTextColor' />
+            </motion.button>
+          ))}
         <motion.div
           whileTap={{ scale: 0.8 }}
           onClick={showCart}
           className='relative flex cursor-pointer items-center justify-center gap-2'>
-          <HiOutlineShoppingBag className='text-[22px] text-textColor duration-100 hover:text-hoverTextColor' />
-          {cartItems && cartItems.length > 0 && (
-            <div className='absolute bottom-4 -left-2 flex h-4 w-4 items-center justify-center rounded-full bg-lime-500 shadow-md shadow-slate-200'>
-              <p className='mt-[1px] text-[10px] text-white'>
-                {cartItems.length}
-              </p>
+          <BsCart2 className='text-2xl text-textColor duration-100 hover:text-hoverTextColor' />
+          {cart && cart.length > 0 && (
+            <div className='absolute bottom-[22px] left-[60px] flex h-4 w-4 items-center justify-center rounded-full bg-lime-500 shadow-md shadow-slate-200'>
+              <p className='mt-[1px] text-[10px] text-white'>{totalQty}</p>
             </div>
           )}
+          <div className='flex w-12 flex-col justify-center -space-y-[2px] pt-1 text-xs'>
+            <p className='text-textColor'>Cart</p>
+            <p className='text-lime-500'>${subtotalPrice}</p>
+          </div>
         </motion.div>
 
         {/* Avatar */}
@@ -130,21 +136,21 @@ export const DesktopHeader = () => {
                   ? user.displayName.substr(0, 20) + "..."
                   : userName}
               </p>
-              {user && user.email === "syntheticquimera@gmail.com" && (
-                <Link to={"/admin"}>
-                  <p
-                    className='flex cursor-pointer items-center  gap-3 px-4 py-2 text-sm text-textColor 
+              {/* {user && user.email === "example@gmail.com" && (
+                  )} */}
+              <Link to={"/admin"}>
+                <p
+                  className='flex cursor-pointer items-center  gap-3 px-4 py-2 text-sm text-textColor 
                     transition-all duration-100 ease-in-out hover:bg-slate-100'>
-                    <MdOutlineDashboard className='text-xl' />
-                    Dashboard
-                  </p>
-                </Link>
-              )}
+                  <BsGrid className='text-xl' />
+                  Dashboard
+                </p>
+              </Link>
               <p
                 onClick={logout}
                 className='flex cursor-pointer items-center  gap-3 px-4 py-2 text-sm text-textColor 
                 transition-all duration-100 ease-in-out hover:bg-slate-100'>
-                <HiOutlineArrowRightOnRectangle className='text-xl' />
+                <BsBoxArrowRight className='text-xl' />
                 Logout
               </p>
             </motion.div>

@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import * as Yup from "yup";
-import { motion } from "framer-motion";
 import { Formik, Field, Form, ErrorMessage } from "formik";
-import { IoCloudUploadOutline, IoTrashOutline } from "react-icons/io5";
-import { BiDollar } from "react-icons/bi";
+import { BsCurrencyDollar } from "react-icons/bs";
 import { saveItem } from "../../../utils/firebaseFunctions";
 import { useStateValue } from "../../../context/StateProvider";
 import { useFetchData, useUploadImage } from "../../../hooks";
-import { Title, HwButton, ErrorMessageForm } from "../../shared";
+import { Title, HwButton, ErrorIconMessage, FileField } from "../../shared";
 
 export const ItemForm = () => {
   const { fetchData } = useFetchData();
@@ -33,24 +31,28 @@ export const ItemForm = () => {
 
   const validationSchema = Yup.object().shape({
     title: Yup.string()
-      .max(20, "Must be 20 characters or less")
-      .required("You must add a title"),
+      .max(20, "Title should not exceed 20 characters")
+      .required("Title is a required field"),
     price: Yup.number()
-      .min(0.1, "Must contain a minimum amount of one digit")
-      .required("A minimum price is required"),
+      .min(0.1, "Minimum price should contain at least one digit")
+      .required("Price is a required field"),
     description: Yup.string()
-      .max(140, "Must be 140 characters or less")
-      .required("You must add a description"),
-    category: Yup.string().required("Assign a category is necessary"),
+      .max(140, "Description should not exceed 140 characters")
+      .required("Description is a required field"),
+    category: Yup.string().required("Category is a required field"),
     file: Yup.mixed()
-      .test("fileType", "Unsupported File Format", (value) => {
-        if (value) {
-          const extension = value.name.split(".").pop();
-          return ["jpg", "jpeg", "png", "gif"].includes(extension);
+      .test(
+        "fileType",
+        "Unsupported file format, only jpg, jpeg, png, svg and gif are allowed",
+        (value) => {
+          if (value) {
+            const extension = value.name.split(".").pop();
+            return ["jpg", "jpeg", "png", "gif", "svg"].includes(extension);
+          }
+          return true;
         }
-        return true;
-      })
-      .required("Upload a image"),
+      )
+      .required("An image is required"),
   });
 
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
@@ -63,7 +65,6 @@ export const ItemForm = () => {
         description: values.description,
         category: values.category,
         file: imageAsset,
-        qty: 1,
         stars: 0,
       };
       saveItem(data);
@@ -95,113 +96,76 @@ export const ItemForm = () => {
                     className='input-field'
                     placeholder='Title'
                   />
+                  <ErrorMessage name='title'>
+                    {(msg) => <ErrorIconMessage msg={msg} />}
+                  </ErrorMessage>
                 </div>
-                <ErrorMessage name='title'>{ErrorMessageForm}</ErrorMessage>
 
                 <div className='input-container'>
-                  <BiDollar className='ml-2 mb-[2px] text-xl text-lightText' />
+                  <BsCurrencyDollar className='ml-2 mb-[2px] text-xl text-lightText' />
                   <Field
                     name='price'
                     type='number'
-                    className='input-field pl-1'
+                    className='input-field'
                     placeholder='Price'
                   />
+                  <ErrorMessage name='price'>
+                    {(msg) => <ErrorIconMessage msg={msg} />}
+                  </ErrorMessage>
                 </div>
-                <ErrorMessage name='price'>{ErrorMessageForm}</ErrorMessage>
 
-                <div className='input-container rounded-lg border-2'>
+                <div className='input-container'>
                   <Field
+                    rows={5}
                     name='description'
                     as='textarea'
                     className='input-field'
                     placeholder='Description'
                   />
+                  <ErrorMessage name='description'>
+                    {(msg) => <ErrorIconMessage msg={msg} />}
+                  </ErrorMessage>
                 </div>
-                <ErrorMessage name='description'>
-                  {ErrorMessageForm}
-                </ErrorMessage>
 
-                <Field
-                  name='category'
-                  as='select'
-                  className='input-field cursor-pointer border-b-2'>
-                  <option value='' disabled>
-                    Select a category
-                  </option>
-                  {categories &&
-                    categories.map((e) => (
-                      <option
-                        key={e.id}
-                        value={e.name}
-                        className='text-textColor'>
-                        {e.name}
-                      </option>
-                    ))}
-                </Field>
-                <ErrorMessage name='category'>{ErrorMessageForm}</ErrorMessage>
+                <div className='input-container'>
+                  <Field
+                    name='category'
+                    as='select'
+                    className='input-field cursor-pointer'>
+                    <option value='' disabled>
+                      Select a category
+                    </option>
+                    {categories &&
+                      categories.map((e) => (
+                        <option
+                          key={e.id}
+                          value={e.name}
+                          className='text-textColor'>
+                          {e.name}
+                        </option>
+                      ))}
+                  </Field>
+                  <ErrorMessage name='category'>
+                    {(msg) => <ErrorIconMessage msg={msg} />}
+                  </ErrorMessage>
+                </div>
               </div>
               <div className='flex h-full w-full'>
                 <Field name='file'>
                   {({ form }) => (
-                    <div
-                      className='group flex h-225 w-full cursor-pointer flex-col items-center justify-center
-                 overflow-hidden rounded-lg border-2 border-dotted border-gray-300 md:h-340'>
-                      {isLoading ? (
-                        <div className='relative top-0 w-[60%] overflow-hidden rounded-full bg-gray-200'>
-                          <div
-                            className='bg-orange-600 p-0.5 leading-none duration-300'
-                            style={{ width: uploadProgressInfo + "%" }}></div>
-                        </div>
-                      ) : (
-                        <>
-                          {!imageAsset ? (
-                            <>
-                              <label className='flex h-full w-full cursor-pointer flex-col items-center justify-center gap-2 text-center'>
-                                <IoCloudUploadOutline className='text-3xl text-gray-500 hover:text-gray-700' />
-                                <p className='text-gray-500 hover:text-gray-700'>
-                                  Click here to upload an image
-                                </p>
-                                <input
-                                  className='h-0 w-0'
-                                  type='file'
-                                  onChange={(e) => {
-                                    form.setFieldValue(
-                                      "file",
-                                      e.target.files[0]
-                                    );
-                                    uploadImage(e);
-                                  }}
-                                />
-                              </label>
-                            </>
-                          ) : (
-                            <>
-                              <div className='relative h-full w-full'>
-                                <img
-                                  src={imageAsset}
-                                  alt='Selected Image'
-                                  className='h-full w-full object-cover'
-                                />
-                                <motion.button
-                                  whileTap={{ scale: 0.8 }}
-                                  type='button'
-                                  className='absolute bottom-3 right-3 cursor-pointer rounded-full bg-red-500 
-                              p-3 text-xl outline-none duration-300 hover:bg-red-400 hover:shadow-md'
-                                  onClick={() => {
-                                    setImageAsset(null);
-                                    deleteImage();
-                                  }}>
-                                  <IoTrashOutline className='text-white' />
-                                </motion.button>
-                              </div>
-                            </>
-                          )}
-                        </>
-                      )}
-                    </div>
+                    <FileField
+                      title='Click here to upload an image'
+                      form={form}
+                      errorName='file'
+                      isLoading={isLoading}
+                      uploadProgressInfo={uploadProgressInfo}
+                      imageAsset={imageAsset}
+                      setImageAsset={setImageAsset}
+                      deleteImage={deleteImage}
+                      uploadImage={uploadImage}
+                    />
                   )}
                 </Field>
-                <ErrorMessage name='file'>{ErrorMessageForm}</ErrorMessage>
               </div>
             </div>
 

@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { actionType } from "../../../context/reducer";
 import { useStateValue } from "../../../context/StateProvider";
-import { useAuth } from "../../../hooks";
+import { useAuth, useCartData } from "../../../hooks";
 import { HwButton, CartItem, CircleButton } from "../../shared";
 
 export const Cart = () => {
-  const [{ cartOpen, cartItems, user }, dispatch] = useStateValue();
-  const [flag, setFlag] = useState(1);
-  const [tot, setTot] = useState(0);
+  const [{ cartOpen, cart, user }, dispatch] = useStateValue();
   const { login } = useAuth();
+  const { subtotalPrice } = useCartData();
 
   const showCart = () => {
     dispatch({
@@ -18,20 +17,10 @@ export const Cart = () => {
     });
   };
 
-  useEffect(() => {
-    let totalPrice = cartItems.reduce(function (accumulator, item) {
-      return accumulator + item.qty * item.price;
-    }, 0);
-    setTot(totalPrice);
-  }, [tot, flag]);
-
   const clearCart = () => {
     dispatch({
-      type: actionType.SET_CART_ITEMS,
-      cartItems: [],
+      type: actionType.SET_EMPTY_CART,
     });
-
-    localStorage.setItem("cartItems", JSON.stringify([]));
   };
 
   return (
@@ -44,35 +33,30 @@ export const Cart = () => {
         <CircleButton type='arrowLeft' onClick={showCart} />
         <CircleButton type='delete' onClick={clearCart} />
       </div>
-      {cartItems && cartItems.length > 0 ? (
+      {cart && cart.length > 0 ? (
         <div className='flex h-full w-full flex-col'>
           <div className='md:h-42 flex h-340 w-full flex-col gap-3 overflow-y-scroll px-6 py-6 scrollbar-none'>
-            {cartItems &&
-              cartItems.length > 0 &&
-              cartItems.map((item) => (
-                <CartItem
-                  key={item.id}
-                  item={item}
-                  setFlag={setFlag}
-                  flag={flag}
-                />
-              ))}
+            {cart &&
+              cart.length > 0 &&
+              cart.map((item) => <CartItem key={item.id} item={item} />)}
           </div>
           {/* Total */}
           <div className='flex w-full flex-1 flex-col items-center justify-evenly rounded-t-2xl border-t bg-white px-8 py-2'>
             <div className='flex w-full items-center justify-between'>
               <p className='text-lg text-textColor'>Sub Total</p>
-              <p className='text-lg text-textColor'>${tot}</p>
+              <p className='text-lg text-textColor'>${subtotalPrice}</p>
             </div>
             <div className='flex w-full items-center justify-between'>
               <p className='text-lg text-textColor'>Delivery</p>
-              <p className='text-lg text-textColor'>$2.5</p>
+              <p className='text-lg text-textColor'>$2.50</p>
             </div>
             <div className='my-2 w-full border-b ' />
 
             <div className='flex w-full items-center justify-between'>
               <p className='text-lg text-hoverTextColor'>Total</p>
-              <p className='text-lg text-hoverTextColor'>${tot + 2.5}</p>
+              <p className='text-lg text-hoverTextColor'>
+                ${(subtotalPrice + 2.5).toFixed(1)}0
+              </p>
             </div>
 
             {user ? (

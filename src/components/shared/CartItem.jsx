@@ -1,17 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import BeatLoader from "react-spinners/BeatLoader";
-import { HiOutlineMinusCircle, HiPlusCircle } from "react-icons/hi2";
+import { BsDashCircle, BsPlusCircleFill } from "react-icons/bs";
 import { useStateValue } from "../../context/StateProvider";
 import { actionType } from "../../context/reducer";
 
-let items = [];
-
-export const CartItem = ({ item, setFlag, flag }) => {
-  const [{ cartItems }, dispatch] = useStateValue();
+export const CartItem = ({ item }) => {
+  const [{ cart }, dispatch] = useStateValue();
   const [isLoading, setIsLoading] = useState(true);
-
-  const [qty, setQty] = useState(item.qty);
 
   useEffect(() => {
     if (item && item.file) {
@@ -22,47 +18,22 @@ export const CartItem = ({ item, setFlag, flag }) => {
         setIsLoading(false);
       };
     }
-  }, [item]);
+  }, []);
 
-  const cartDispatch = () => {
-    localStorage.setItem("cartItems", JSON.stringify(items));
+  const handleIncrement = () => {
     dispatch({
-      type: actionType.SET_CART_ITEMS,
-      cartItems: items,
+      type: actionType.SET_INCREMENT_ITEM_CART,
+      cart: item,
     });
   };
 
-  const updateQty = (action, id) => {
-    if (action === "add") {
-      setQty(qty + 1);
-      cartItems.map((item) => {
-        if (item.id === id) {
-          item.qty += 1;
-          setFlag(flag + 1);
-        }
-      });
-      cartDispatch();
-    } else {
-      if (qty == 1) {
-        items = cartItems.filter((item) => item.id !== id);
-        setFlag(flag + 1);
-        cartDispatch();
-      } else {
-        setQty(qty - 1);
-        cartItems.map((item) => {
-          if (item.id === id) {
-            item.qty -= 1;
-            setFlag(flag + 1);
-          }
-        });
-        cartDispatch();
-      }
-    }
+  const handleDecrement = () => {
+    dispatch({
+      type: actionType.SET_DECREMENT_ITEM_CART,
+      cart: item,
+    });
   };
-
-  useEffect(() => {
-    items = cartItems;
-  }, [qty, items]);
+  console.log(cart);
 
   return (
     <div className='flex w-full items-center gap-2 rounded-lg bg-white p-2 px-2 shadow-sm shadow-slate-200'>
@@ -81,22 +52,18 @@ export const CartItem = ({ item, setFlag, flag }) => {
       <div className='flex flex-col'>
         <p className='text-sm text-textColor'>{item.title}</p>
         <p className='block text-sm text-lightText'>
-          ${parseFloat(item.price) * qty}
+          ${item.newPrice ? item.newPrice : item.price}
         </p>
       </div>
 
       {/* button */}
-      <div className='group ml-auto flex cursor-pointer items-center gap-2'>
-        <motion.div
-          whileTap={{ scale: 0.8 }}
-          onClick={() => updateQty("remove", item?.id)}>
-          <HiOutlineMinusCircle className='text-[22px] text-lime-500 duration-100' />
+      <div className='group ml-auto flex cursor-pointer items-center justify-end gap-2'>
+        <motion.div whileTap={{ scale: 0.8 }} onClick={handleDecrement}>
+          <BsDashCircle className='text-lg text-lime-500 duration-100' />
         </motion.div>
-        <p className='text-textColor'>{qty}</p>
-        <motion.div
-          whileTap={{ scale: 0.8 }}
-          onClick={() => updateQty("add", item?.id)}>
-          <HiPlusCircle className='text-[22px] text-lime-500 duration-100' />
+        <p className='w-6 text-center text-textColor '>{item.qty}</p>
+        <motion.div whileTap={{ scale: 0.8 }} onClick={handleIncrement}>
+          <BsPlusCircleFill className='text-lg text-lime-500 duration-100' />
         </motion.div>
       </div>
     </div>

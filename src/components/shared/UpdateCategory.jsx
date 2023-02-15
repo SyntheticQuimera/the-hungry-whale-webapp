@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { BiEditAlt, BiCheck } from "react-icons/bi";
-import { TiDelete } from "react-icons/ti";
+import { BsPencil, BsCheck2, BsTrash } from "react-icons/bs";
 import {
   removeCategory,
   updateCategory,
@@ -10,7 +9,7 @@ import {
 } from "../../utils/firebaseFunctions";
 import { useStateValue } from "../../context/StateProvider";
 import { useFetchData } from "../../hooks";
-import { ErrorMessageForm } from "./ErrorMessageForm";
+import { ErrorIconMessage } from "../shared";
 
 export const UpdateCategory = ({ category }) => {
   const [{ foodItems }] = useStateValue();
@@ -49,9 +48,7 @@ export const UpdateCategory = ({ category }) => {
   };
 
   return (
-    <div
-      key={category.id}
-      className='mb-4 flex min-w-fit items-center justify-between gap-4 rounded-lg border-none bg-white px-4 py-3 text-xs font-semibold tracking-wider text-hoverTextColor shadow-md shadow-slate-200 outline-none'>
+    <div className='mb-4 flex min-w-fit items-center justify-between gap-4 rounded-lg border-none bg-white px-4 py-3 text-xs font-semibold tracking-wider text-hoverTextColor shadow-md shadow-slate-200 outline-none'>
       {editingCategory === category.id ? (
         <Formik
           initialValues={{
@@ -60,48 +57,50 @@ export const UpdateCategory = ({ category }) => {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}>
           <Form>
-            <Field
-              className='border-b bg-transparent pb-2 outline-none'
-              name='updateCategory'
-              type='text'
-              placeholder={category.name}
-            />
-            <button className='relative top-[6px]'>
-              <BiCheck className='cursor-pointer text-lg duration-300 hover:scale-150 hover:text-lime-500' />
-            </button>
-            <ErrorMessage name='updateCategory'>
-              {ErrorMessageForm}
-            </ErrorMessage>
+            <div className='flex h-full w-full items-center rounded-md bg-slate-100'>
+              <Field
+                className='h-full w-full bg-transparent py-1 px-3 text-xs text-textColor outline-none placeholder:text-lightText'
+                name='updateCategory'
+                type='text'
+                placeholder={category.name}
+              />
+              <button className='cursor-pointer pr-3 text-lg duration-300 hover:scale-150 hover:text-lime-500'>
+                <BsCheck2 className='text-base' />
+              </button>
+              <ErrorMessage name='updateCategory'>
+                {(msg) => <ErrorIconMessage msg={msg} />}
+              </ErrorMessage>
+            </div>
           </Form>
         </Formik>
       ) : (
         <>
           <p>{category.name}</p>
-          <BiEditAlt
+          <BsPencil
             onClick={() => setEditingCategory(category.id)}
-            className='cursor-pointer text-lg duration-300 hover:scale-150 hover:text-orange-600'
+            className='cursor-pointer text-base duration-300 hover:scale-150 hover:text-orange-600'
           />
         </>
       )}
-      <TiDelete
+      <BsTrash
         onClick={() => {
           setDeleteModal(category.id);
-          fetchCategories();
         }}
-        className='cursor-pointer text-lg duration-300 hover:scale-150 hover:text-red-500'
+        className='cursor-pointer text-base duration-300 hover:scale-150 hover:text-red-500'
       />
       {deleteModal === category.id && (
-        <div className='fixed left-0 top-0 z-50 flex h-full w-screen items-center justify-center bg-slate-100/60 backdrop-blur-md'>
+        <div className='fixed left-0 top-0 z-[103] flex h-full w-screen items-center justify-center bg-slate-100/60 backdrop-blur-md'>
           <div className='flex w-80 flex-col gap-4 rounded-lg bg-white p-6 shadow-md shadow-slate-200 '>
             <p className='text-base text-textColor '>
-              This action delete the category and all items in there. Are you
-              sure?
+              This action will delete the "{category.name}" category and all the
+              assigned items. Are you sure?
             </p>
             <div className=' flex items-center justify-end gap-6'>
               <button
                 onClick={() => {
                   removeCategory(category);
                   setDeleteModal(null);
+                  fetchCategories();
                 }}
                 className='flex w-20 justify-center rounded-lg border-2 border-orange-600 py-[6px] px-[14px] text-center text-orange-600'>
                 Yes

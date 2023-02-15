@@ -1,7 +1,9 @@
 import React from "react";
 import * as Yup from "yup";
 import { Formik, Field, Form, ErrorMessage } from "formik";
-import { HwButton, Title, MapView, ErrorMessageForm } from "../../shared";
+import { HwButton, Title, MapView, ErrorIconMessage } from "../../shared";
+import { saveReservation } from "../../../utils/firebaseFunctions";
+import { BsClock, BsCalendar4Week } from "react-icons/bs";
 
 export const Reservation = () => {
   const peopleAmount = [
@@ -39,29 +41,30 @@ export const Reservation = () => {
   };
   const validationSchema = Yup.object().shape({
     name: Yup.string()
-      .max(20, "Must be 20 characters or less")
-      .required("You must add your full name"),
-    date: Yup.date().required("A date is required"),
-    hour: Yup.string().required("A hour is required"),
-
-    amount: Yup.string().required("Assign a number is necessary"),
+      .max(20, "Name should not exceed 20 characters")
+      .required("Full name is required"),
+    date: Yup.date().required("Date field is mandatory"),
+    hour: Yup.string().required("Hour field is mandatory"),
+    amount: Yup.string().required("Amount is a required field"),
     phone: Yup.string()
-      .matches(/^\d{9}$/, "Must contain a valid phone number")
-      .required("A phone number is required"),
+      .matches(/^\d{9}$/, "Phone number must be a 9 digit numeric value")
+      .required("Phone number is mandatory"),
     email: Yup.string()
-      .email("Must be a valid email address")
-      .max(40, "Must be 40 characters or less")
-      .required("You must add an email address"),
+      .email("Please provide a valid email address")
+      .max(40, "Email address should not exceed 40 characters")
+      .required("Email is a required field"),
     ssn: Yup.string()
-      .matches(/^\d{9}$/, "Must contain a valid social security number")
-      .required("A social security number is required"),
-    note: Yup.string().max(140, "Must be 140 characters or less"),
+      .matches(
+        /^\d{9}$/,
+        "Social security number must be a 9 digit numeric value"
+      )
+      .required("Social security number is mandatory"),
+    note: Yup.string().max(140, "Note should not exceed 140 characters"),
   });
 
   return (
     <>
       <Title title='Reservation' />
-
       <div
         className='flex w-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg
            shadow-slate-200  lg:flex-row '>
@@ -71,62 +74,55 @@ export const Reservation = () => {
             validationSchema={validationSchema}
             onSubmit={(values, { setSubmitting, resetForm }) => {
               setTimeout(() => {
+                const data = {
+                  id: `${Date.now()}`,
+                  name: values.name,
+                  date: values.date,
+                  amount: values.amount,
+                  email: values.email,
+                  phone: values.phone,
+                  ssn: values.ssn,
+                  note: values.note,
+                };
+                saveReservation(data);
                 setSubmitting(false);
                 resetForm();
               }, 400);
             }}>
             <Form className='flex w-full flex-col items-center justify-center gap-4 p-8 '>
-              <div className='flex w-full flex-col gap-6 md:flex-row'>
-                <div className='flex w-full '>
-                  <div className='input-container'>
-                    <Field
-                      name='date'
-                      type='date'
-                      min={getDates().today}
-                      max={getDates().threeWeeksFromToday}
-                      className='input-field'
-                    />
-                  </div>
-
-                  <div className='input-container'>
-                    <Field
-                      name='hour'
-                      type='time'
-                      min='09:00'
-                      max='18:00'
-                      className='input-field'
-                    />
-                  </div>
-                </div>
-
+              <div className='input-container'>
                 <Field
-                  name='amount'
-                  as='select'
-                  className='input-field cursor-pointer border-b-2'>
-                  <option value='' disabled>
-                    People
-                  </option>
-                  {peopleAmount &&
-                    peopleAmount.map((e, i) => (
-                      <option key={i} value={e} className='text-textColor'>
-                        {e}
-                      </option>
-                    ))}
-                </Field>
+                  name='name'
+                  type='text'
+                  className='input-field'
+                  placeholder='Enter your full name'
+                />
+                <ErrorMessage name='name'>
+                  {(msg) => <ErrorIconMessage msg={msg} />}
+                </ErrorMessage>
               </div>
-              <ErrorMessage name='date'>{ErrorMessageForm}</ErrorMessage>
-              <ErrorMessage name='hour'>{ErrorMessageForm}</ErrorMessage>
-              <ErrorMessage name='amount'>{ErrorMessageForm}</ErrorMessage>
 
               <div className='flex w-full flex-col gap-6 md:flex-row'>
                 <div className='input-container'>
                   <Field
-                    name='name'
-                    type='text'
-                    className='input-field'
-                    placeholder='name'
-                  />
+                    name='amount'
+                    as='select'
+                    className='input-field cursor-pointer'>
+                    <option value='' disabled>
+                      Amount of people
+                    </option>
+                    {peopleAmount &&
+                      peopleAmount.map((e, i) => (
+                        <option key={i} value={e} className='text-textColor'>
+                          {e}
+                        </option>
+                      ))}
+                  </Field>
+                  <ErrorMessage name='amount'>
+                    {(msg) => <ErrorIconMessage msg={msg} />}
+                  </ErrorMessage>
                 </div>
+
                 <div className='input-container'>
                   <Field
                     name='email'
@@ -134,10 +130,12 @@ export const Reservation = () => {
                     className='input-field'
                     placeholder='example@mail.com'
                   />
+
+                  <ErrorMessage name='email'>
+                    {(msg) => <ErrorIconMessage msg={msg} />}
+                  </ErrorMessage>
                 </div>
               </div>
-              <ErrorMessage name='name'>{ErrorMessageForm}</ErrorMessage>
-              <ErrorMessage name='email'>{ErrorMessageForm}</ErrorMessage>
 
               <div className='flex w-full flex-col gap-6 md:flex-row'>
                 <div className='input-container'>
@@ -147,6 +145,9 @@ export const Reservation = () => {
                     className='input-field'
                     placeholder='+1-000-000-0000'
                   />
+                  <ErrorMessage name='phone'>
+                    {(msg) => <ErrorIconMessage msg={msg} />}
+                  </ErrorMessage>
                 </div>
                 <div className='input-container'>
                   <Field
@@ -155,12 +156,45 @@ export const Reservation = () => {
                     className='input-field'
                     placeholder='Security Social Number'
                   />
+                  <ErrorMessage name='ssn'>
+                    {(msg) => <ErrorIconMessage msg={msg} />}
+                  </ErrorMessage>
                 </div>
               </div>
-              <ErrorMessage name='phone'>{ErrorMessageForm}</ErrorMessage>
-              <ErrorMessage name='ssn'>{ErrorMessageForm}</ErrorMessage>
 
-              <div className='input-container rounded-lg border-2'>
+              <div className='flex w-full flex-col gap-6 md:flex-row'>
+                <div className='input-container'>
+                  <BsCalendar4Week className='ml-2 mb-[2px] text-xl text-lightText sm:hidden' />
+                  <Field
+                    name='date'
+                    type='date'
+                    min={getDates().today}
+                    max={getDates().threeWeeksFromToday}
+                    className='input-field'
+                    placeholder='Add a date'
+                  />
+                  <ErrorMessage name='date'>
+                    {(msg) => <ErrorIconMessage msg={msg} />}
+                  </ErrorMessage>
+                </div>
+
+                <div className='input-container'>
+                  <BsClock className='ml-2 mb-[2px] text-xl text-lightText sm:hidden' />
+                  <Field
+                    name='hour'
+                    type='time'
+                    min='09:00'
+                    max='18:00'
+                    className='input-field'
+                    placeholder='Add a hour'
+                  />
+                  <ErrorMessage name='hour'>
+                    {(msg) => <ErrorIconMessage msg={msg} />}
+                  </ErrorMessage>
+                </div>
+              </div>
+
+              <div className='input-container'>
                 <Field
                   name='note'
                   type='text'
@@ -169,9 +203,10 @@ export const Reservation = () => {
                   className='input-field'
                   placeholder='Note - Not Required'
                 />
+                <ErrorMessage name='note'>
+                  {(msg) => <ErrorIconMessage msg={msg} />}
+                </ErrorMessage>
               </div>
-              <ErrorMessage name='note'>{ErrorMessageForm}</ErrorMessage>
-
               <div className='flex w-full justify-end'>
                 <HwButton title='Reserve' type='solidFull' />
               </div>

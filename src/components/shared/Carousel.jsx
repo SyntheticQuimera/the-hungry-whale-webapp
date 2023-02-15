@@ -8,7 +8,6 @@ import { CircleButton } from "../shared";
 export const Carousel = () => {
   const [{ foodItems }] = useStateValue();
   const data = foodItems?.filter((n) => n.category === "Presentation");
-
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
@@ -22,7 +21,7 @@ export const Carousel = () => {
         setIsLoading(false);
       };
     }
-  }, [data]);
+  }, [index, foodItems]);
 
   const handleNext = () => {
     const newIndex = index + 1;

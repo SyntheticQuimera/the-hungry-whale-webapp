@@ -8,4 +8,6 @@ export * from "./ItemsRow";
 export * from "./Title";
 export * from "./CategoriesRow";
 export * from "./UpdateItem";
-export * from "./ErrorMessageForm";
+export * from "./ErrorIconMessage";
+export * from "./FileField";
+export * from "./NavLink";

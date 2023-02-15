@@ -1,15 +1,17 @@
-import React, { useState } from "react";
-import {
-  CategoriesRow,
-  ItemsRow,
-  ManageItemsContainer,
-  Title,
-} from "../../shared";
+import React, { useEffect, useState } from "react";
+import { CategoriesRow, ItemsRow, Title } from "../../shared";
 import { useStateValue } from "../../../context/StateProvider";
 
 export const ManageItems = () => {
-  const [filter, setFilter] = useState("Presentation");
+  const [filter, setFilter] = useState("");
   const [{ foodItems, categories }] = useStateValue();
+
+  const firstCategory =
+    (categories && categories[0] && categories[0].name) || "";
+
+  useEffect(() => {
+    setFilter(`${firstCategory}`);
+  }, [categories]);
 
   return (
     <>

@@ -12,7 +12,7 @@ export const CategoriesRow = ({ categories, setFilter, filter }) => {
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
-      className='flex w-full items-center justify-start gap-4 overflow-x-scroll py-6 px-1 pt-8 scrollbar-none'>
+      className='flex w-full items-center justify-start gap-4 overflow-x-scroll px-1 pt-2 pb-6 scrollbar-none'>
       {categories &&
         categories.map((category) => (
           <button

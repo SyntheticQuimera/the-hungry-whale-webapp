@@ -31,7 +31,7 @@ export const useFetchData = () => {
     await getSettings().then((data) => {
       dispatch({
         type: actionType.SET_SETTINGS_DATA,
-        settings: data,
+        settings: data[0],
       });
     });
   };

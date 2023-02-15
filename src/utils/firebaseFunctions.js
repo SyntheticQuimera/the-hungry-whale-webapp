@@ -24,6 +24,14 @@ export const saveCategory = async (data) => {
   });
 };
 
+// Saving new reservation
+
+export const saveReservation = async (data) => {
+  await setDoc(doc(firestore, "reservation", data.id), data, {
+    merge: true,
+  });
+};
+
 // getall food items
 export const getAllFoodItems = async () => {
   const items = await getDocs(
@@ -47,6 +55,10 @@ export const removeCategory = async (data) => {
   await deleteDoc(doc(firestore, "category", data.id));
 };
 
+// remove food category
+export const removeItem = async (data) => {
+  await deleteDoc(doc(firestore, "foodItems", data.id));
+};
 // update name field in category doc
 
 export const updateCategory = async (data) => {
@@ -86,6 +98,9 @@ export const updateSettings = async (data) => {
     aboutUsDescription: data.aboutUsDescription,
     logo: data.logo,
     aboutUsImage: data.aboutUsImage,
+    facebook: data.facebook,
+    instagram: data.instagram,
+    tiktok: data.tiktok,
   });
 };
 

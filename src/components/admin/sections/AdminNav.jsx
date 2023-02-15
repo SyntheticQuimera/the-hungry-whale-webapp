@@ -1,15 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import {
-  HiOutlineSquaresPlus,
-  HiOutlineDocumentPlus,
-  HiOutlineArrowRightOnRectangle,
-} from "react-icons/hi2";
-import { IoMdArrowBack } from "react-icons/io";
-import { HiMenuAlt3 } from "react-icons/hi";
-import { RiSettings4Line } from "react-icons/ri";
-import { TbReportAnalytics, TbMotorbike } from "react-icons/tb";
-import { MdOutlineCategory } from "react-icons/md";
+  BsBarChart,
+  BsFileEarmarkPlus,
+  BsGear,
+  BsDiagram3,
+  BsFiles,
+  BsInboxes,
+  BsArrowLeft,
+  BsBoxArrowRight,
+  BsList,
+} from "react-icons/bs";
 import { useStateValue } from "../../../context/StateProvider";
 import { useAuth } from "../../../hooks";
 
@@ -20,22 +21,27 @@ export const AdminNav = ({ setActiveSection }) => {
     {
       name: "Add Item",
       section: "addItems",
-      icon: HiOutlineDocumentPlus,
+      icon: BsFileEarmarkPlus,
       margin: true,
     },
     {
       name: "Manage Items",
       section: "manageItems",
-      icon: HiOutlineSquaresPlus,
+      icon: BsFiles,
     },
     {
       name: "Categories",
       section: "manageCategories",
-      icon: MdOutlineCategory,
+      icon: BsDiagram3,
     },
-    { name: "analytics", section: "/", icon: TbReportAnalytics, margin: true },
-    { name: "Buy Orders", section: "/", icon: TbMotorbike },
-    { name: "Settings", section: "settings", icon: RiSettings4Line },
+    {
+      name: "analytics",
+      section: "/",
+      icon: BsBarChart,
+      margin: true,
+    },
+    { name: "Buy Orders", section: "/", icon: BsInboxes },
+    { name: "Settings", section: "settings", icon: BsGear },
   ];
 
   const [{ sidebarOpen }, dispatch] = useStateValue();
@@ -46,7 +52,7 @@ export const AdminNav = ({ setActiveSection }) => {
         sidebarOpen ? "w-72" : "w-16"
       } fixed z-[101] border-r border-slate-200 px-4 text-textColor duration-500`}>
       <div className='flex justify-end py-3'>
-        <HiMenuAlt3
+        <BsList
           size={26}
           className='cursor-pointer font-normal'
           onClick={() => dispatch({ type: "SET_SIDEBAR_SWITCH" })}
@@ -56,9 +62,9 @@ export const AdminNav = ({ setActiveSection }) => {
         to='/'
         className={`
             ${sidebarOpen && "hover:bg-slate-200"} group
-            mt-5 flex cursor-pointer items-center gap-3.5 rounded-md p-2 text-sm font-normal `}>
+            mt-9 flex cursor-pointer items-center gap-3.5 rounded-md p-2 text-sm font-normal `}>
         <div>
-          <IoMdArrowBack className='text-[20px]' />
+          <BsArrowLeft className='text-xl' />
         </div>
         <h2
           style={{
@@ -108,9 +114,9 @@ export const AdminNav = ({ setActiveSection }) => {
         to='/'
         onClick={logout}
         className={`${sidebarOpen && "hover:bg-slate-200"} group
-            mt-5 flex cursor-pointer items-center gap-3.5 rounded-md p-2 text-sm font-normal `}>
+            mt-9 flex cursor-pointer items-center gap-3.5 rounded-md p-2 text-sm font-normal `}>
         <div>
-          <HiOutlineArrowRightOnRectangle className='text-[20px]' />
+          <BsBoxArrowRight className='text-xl' />
         </div>
         <h2
           style={{

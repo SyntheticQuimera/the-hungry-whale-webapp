@@ -1,7 +1,6 @@
-import { fetchCart, fetchUser } from "../utils/fetchLocalStorage";
+import { fetchUser } from "../utils/fetchLocalStorage";
 
 const userData = fetchUser();
-const cartData = fetchCart();
 
 export const initialState = {
   user: userData,
@@ -9,6 +8,6 @@ export const initialState = {
   sidebarOpen: false,
   cartOpen: false,
   categories: null,
-  cartItems: cartData,
+  cart: [],
   settings: null,
 };

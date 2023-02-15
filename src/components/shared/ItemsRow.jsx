@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDragging } from "../../hooks";
 import { BeatLoader } from "react-spinners";
-import { useStateValue } from "../../context/StateProvider";
-import { actionType } from "../../context/reducer";
 import { UpdateItem, CardItem } from "../shared";
 
 export const ItemsRow = ({ flag, data, editable }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [{}, dispatch] = useStateValue();
-  const [items, setItems] = useState([]);
   const [editingItem, setEditingItem] = useState(null);
   const [imageAsset, setImageAsset] = useState(null);
   const { containerRef, handleMouseDown, handleMouseMove, handleMouseUp } =
@@ -20,17 +16,6 @@ export const ItemsRow = ({ flag, data, editable }) => {
     }
   }, [data]);
 
-  const addToCart = () => {
-    dispatch({
-      type: actionType.SET_CART_ITEMS,
-      cartItems: items,
-    });
-    localStorage.setItem("cartItems", JSON.stringify(items));
-  };
-
-  useEffect(() => {
-    addToCart();
-  }, [items]);
   return (
     <div
       ref={containerRef}
@@ -54,6 +39,7 @@ export const ItemsRow = ({ flag, data, editable }) => {
               <>
                 {editingItem === item.id ? (
                   <UpdateItem
+                    key={item.id}
                     item={item}
                     setImageAsset={setImageAsset}
                     imageAsset={imageAsset}
@@ -61,6 +47,7 @@ export const ItemsRow = ({ flag, data, editable }) => {
                   />
                 ) : (
                   <CardItem
+                    key={item.id}
                     item={item}
                     editable
                     onClickEdit={() => {
@@ -72,7 +59,7 @@ export const ItemsRow = ({ flag, data, editable }) => {
               </>
             ) : (
               <>
-                <CardItem item={item} setItems={setItems} />
+                <CardItem key={item.id} item={item} />
               </>
             )}
             {data && data.length === 0 && (

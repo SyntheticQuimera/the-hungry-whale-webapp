@@ -7,6 +7,7 @@ import {
   Menu,
   Reservation,
   SpecialMenu,
+  Footer,
 } from "../main/sections";
 import { useStateValue } from "../../context/StateProvider";
 
@@ -16,13 +17,13 @@ export const Main = () => {
   return (
     <>
       <Header />
-      <div className='w-full p-4 md:px-10'>
+      <div className='w-full px-4 md:px-10'>
         <div className='flex w-full flex-col'>
           <section id='home'>
             <Home />
           </section>
+          <SpecialMenu />
           <section id='menu'>
-            <SpecialMenu />
             <Menu />
           </section>
           <section id='aboutus'>
@@ -34,6 +35,7 @@ export const Main = () => {
           {cartOpen && <Cart />}
         </div>
       </div>
+      <Footer />
     </>
   );
 };
