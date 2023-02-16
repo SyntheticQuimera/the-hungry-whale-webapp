@@ -1,3 +1,11 @@
+The e-commerce web app is built using Vanilla React.js, which is a popular JavaScript library for building user interfaces. React Context is used for state management, allowing data to be shared across different components. Firebase is used for data storage, authentication, and hosting. React Leaflet is used to display the restaurant's location on a map. Framer Motion is used for animation and to enhance the user experience.
+
+URL: https://the-hungry-whale-webapp.web.app/
+
+On the Main page, customers can access different sections such as Home, Food Menu, About Us, Reservation, and Location. The Home section features a presentation and a carousel that displays the restaurant's latest offers and promotions. The Food Menu section allows customers to browse different categories of food and place orders. The About Us section provides information about the restaurant, its history, and its mission. The Reservation section allows customers to book a table at the restaurant, and the Location section displays the restaurant's location on a map.
+
+The Admin page is a browser-based interface that allows restaurant managers to manage the content of the app. The Admin page features different sections to manage the created items, such as a form to add new items, a section to manage the created items and modify them, a section to manage the created categories, and a section to manage the information that is shown on the page such as the logo, the presentation, the about us information, and also the links for social networks.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
